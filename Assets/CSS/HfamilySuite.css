@@ -1,0 +1,47 @@
+/* ==========================================================================
+   HIMALAYAN FAMILY SUITE COMPATIBILITY STYLES
+   ========================================================================== */
+
+/* Forces the layout container to account for the fixed nav bar */
+.detail-container {
+  margin: 120px auto 6rem auto !important;
+  align-items: start;
+}
+
+/* Base header alignment fix for inner files */
+#detail-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: #0d1b2a;
+}
+
+/* Warm Crimson-Burgundy Accent thematic style choice for the Suite page */
+.family-card {
+  border: 2px solid rgb(155, 45, 45) !important;
+  border-radius: 4px;
+}
+
+.family-card h3 {
+  color: rgb(155, 45, 45) !important;
+  font-weight: bold;
+}
+
+.family-btn {
+  background-color: rgb(155, 45, 45) !important;
+  color: white !important;
+  transition: all 200ms ease;
+}
+
+.family-btn:hover {
+  background-color: #721c24 !important;
+  box-shadow: 0 4px 12px rgba(155, 45, 45, 0.3);
+}
+
+/* Form element accent colors when active */
+.sidebar-form .input-group input:focus,
+.sidebar-form .input-group select:focus {
+  outline: none;
+  border-color: rgb(155, 45, 45);
+}

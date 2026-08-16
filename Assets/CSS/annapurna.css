@@ -1,0 +1,78 @@
+/* ==========================================================================
+   ANNAPURNA PENTHOUSE COMPATIBILITY & LUXURY OVERRIDES
+   ========================================================================== */
+
+/* 1. Header Fix: Prevent fixed navigation bar from overlapping content */
+#detail-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: #0d1b2a; /* Keeps consistent navbar background */
+}
+
+/* 2. Container Offset: Push the main layout down 120px to clear the fixed navbar */
+.detail-container {
+  margin: 120px auto 6rem auto !important;
+  align-items: start; /* Prevents sidebar height distortion */
+}
+
+/* 3. Luxury Color Palette Tokens */
+:root {
+  --penthouse-gold: #d4af37;
+  --penthouse-crimson: rgb(155, 45, 45);
+}
+
+/* 4. Typography & Accent Customizations */
+#room-category-label {
+  color: var(--penthouse-gold) !important;
+  font-weight: bold;
+  letter-spacing: 4px;
+}
+
+.price-badge span {
+  color: var(--penthouse-crimson) !important;
+  font-size: 2.2rem;
+}
+
+/* 5. Component Highlights (Reservation Widget & Buttons) */
+.reservation-card {
+  border: 2px solid var(--penthouse-gold) !important;
+  border-radius: 4px;
+}
+
+.reservation-card h3 {
+  color: var(--penthouse-crimson) !important;
+  font-weight: bold;
+}
+
+/* Custom interactive inputs matching penthouse gold theme */
+.sidebar-form .input-group input:focus,
+.sidebar-form .input-group select:focus {
+  outline: none;
+  border-color: var(--penthouse-gold);
+  box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+}
+
+/* Premium Gold Button Styling overriding the standard --new-color */
+.instant-book-btn {
+  background-color: var(--penthouse-gold) !important;
+  color: #0d1b2a !important; /* Deep contrast dark text */
+  letter-spacing: 1px;
+  transition: all 300ms ease;
+}
+
+.instant-book-btn:hover {
+  background-color: #aa8416 !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(170, 132, 22, 0.4);
+}
+
+/* 6. Dynamic Gallery Active State Polish */
+.thumb-box img {
+  border-radius: 2px;
+}
+.thumb-box img:hover {
+  border-color: var(--penthouse-gold) !important;
+  transform: scale(1.02);
+}

@@ -1,0 +1,47 @@
+/* ==========================================================================
+   MOUNTAIN VIEW DELUXE COMPATIBILITY STYLES
+   ========================================================================== */
+
+/* Fixes overlapping layout layout crashes beneath the fixed navigation header */
+.detail-container {
+  margin: 120px auto 6rem auto !important;
+  align-items: start;
+}
+
+#detail-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: #0d1b2a;
+}
+
+/* Mountain Custom Accent Theme Token: Alpine Skyline Sky Blue */
+.mountain-card {
+  border: 2px solid #4a90e2 !important;
+  border-radius: 4px;
+}
+
+.mountain-card h3 {
+  color: #4a90e2 !important;
+  font-weight: bold;
+}
+
+.mountain-btn {
+  background-color: #4a90e2 !important;
+  color: white !important;
+  transition: all 200ms ease-out;
+}
+
+.mountain-btn:hover {
+  background-color: #2b6cb0 !important;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.35);
+}
+
+/* Handles input box focus rings on the mountain layout details view */
+.sidebar-form .input-group input:focus,
+.sidebar-form .input-group select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 4px rgba(74, 144, 226, 0.2);
+}
