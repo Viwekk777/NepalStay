@@ -1,0 +1,5 @@
+# Disable script execution in media directories
+
+<FilesMatch "\.(php|php5|phtml|php7|phps)$">
+Require all denied
+</FilesMatch>

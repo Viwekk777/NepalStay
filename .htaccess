@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent direct browser access to sensitive root files
+    <FilesMatch "^\.env|\.gitignore|composer\.(json|lock)$">
+        Require all denied
+    </FilesMatch>
+
+    # Forward all web traffic into the Public directory
+    RewriteCond %{REQUEST_URI} !^/Public/
+    RewriteRule ^(.*)$ Public/$1 [L]
+
+</IfModule>
