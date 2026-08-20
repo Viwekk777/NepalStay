@@ -73,56 +73,64 @@
     </div>
 
 
-    <div id="checkout">
+<form action="/availability" method="POST" id="checkout">
 
-      <div class="book">
-        <label for="date">CHECK-IN</label>
-        <input type="date" class="child" />
-      </div>
+    <div class="book">
+        <label for="check_in">CHECK-IN</label>
 
-      <div class="book">
-        <label for="date">CHECK-OUT</label>
-        <input type="date" class="child" />
-      </div>
+        <input
+            type="date"
+            id="check_in"
+            name="check_in"
+            class="child"
+            required
+        />
+    </div>
 
-      <div id="guest" class="book">
 
-        <label for="guest">
-          GUESTS
+    <div class="book">
+        <label for="check_out">CHECK-OUT</label>
+
+        <input
+            type="date"
+            id="check_out"
+            name="check_out"
+            class="child"
+            required
+        />
+    </div>
+
+
+    <div id="guest" class="book">
+
+        <label for="num_guests">
+            GUESTS
         </label>
 
-        <select name="" id="selector" class="child">
-          <option value="">1 guest</option>
-          <option value="">2 guests</option>
-          <option value="">3 guests</option>
-          <option value="">4+ guests</option>
+        <select
+            name="num_guests"
+            id="selector"
+            class="child"
+            required
+        >
+            <option value="1">1 guest</option>
+            <option value="2">2 guests</option>
+            <option value="3">3 guests</option>
+            <option value="4">4+ guests</option>
         </select>
-
-      </div>
-
-      <div id="available" class="child">
-        CHECK AVAILABILITY
-      </div>
 
     </div>
 
 
-    <div id="second">
+    <button
+        type="submit"
+        id="available"
+        class="child"
+    >
+        CHECK AVAILABILITY
+    </button>
 
-      <div id="detials">
-
-        <h3>ACCOMODATIONS</h3>
-
-        <h1>
-          Our Finest Rooms
-        </h1>
-
-        <h4>
-          Each room is crafted for comfort, with stunning views of Phewa Lake
-          and the Annapurna range.
-        </h4>
-
-      </div>
+</form>
 
 
       <div class="rooms">

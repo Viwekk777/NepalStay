@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Container;
+use App\Controllers\BookingController;
 use App\Controllers\Router;
 use App\Controllers\HomeController;
 use App\Controllers\RoomController;
@@ -28,11 +29,14 @@ $container->set(DB::class, fn() => new DB
 $router = new Router($container);
 
 $router->registerRoutes('GET','/',[HomeController::class,'home']);
-
 $router->registerRoutes('GET','/rooms',[RoomController::class, 'rooms']);
-$router->registerRoutes('GET', '/room', [RoomController::class, 'getRoom']);//
-
+$router->registerRoutes('POST','/rooms',[RoomController::class,'rooms']);
+$router->registerRoutes('GET', '/room', [RoomController::class, 'getRoom']);
 $router->registerRoutes('GET','/about', [HomeController::class,'about']);
+$router->registerRoutes('GET','/book', [BookingController::class,'book']);
+$router->registerRoutes('POST','/booking', [BookingController::class,'booked']);
+$router->registerRoutes('POST','/availability',[BookingController::class, 'checkAvailability']
+);
 
 
 

@@ -173,88 +173,181 @@ $amenities = is_string($amenities)
         </section>
 
 
-        <aside class="booking-sidebar">
+      <aside class="booking-sidebar">
 
-            <div class="reservation-card">
+    <div class="reservation-card">
 
-                <h3>
-                    Reserve <?= htmlspecialchars($title) ?>
-                </h3>
+        <h3>
+            Reserve <?= htmlspecialchars($title) ?>
+        </h3>
 
+        <form
+            class="sidebar-form"
+            action="/booking"
+            method="POST"
+        >
 
-                <form
-                    class="sidebar-form"
-                    onsubmit="
-                        event.preventDefault();
+            <!-- Room -->
+            <input
+                type="hidden"
+                name="room_id"
+                value="<?= (int) $room['id'] ?>"
+            >
 
-                        alert(
-                            'Thank you for reserving <?= htmlspecialchars($title, ENT_QUOTES) ?>!'
-                        );
-                    "
+            <!-- Check-in -->
+            <div class="input-group">
+
+                <label for="check_in">
+                    CHECK-IN
+                </label>
+
+                <input
+                    type="date"
+                    id="check_in"
+                    name="check_in"
+                    required
                 >
 
-                    <div class="input-group">
-
-                        <label>
-                            CHECK-IN
-                        </label>
-
-                        <input
-                            type="date"
-                            required
-                        />
-
-                    </div>
+            </div>
 
 
-                    <div class="input-group">
+            <!-- Check-out -->
+            <div class="input-group">
 
-                        <label>
-                            CHECK-OUT
-                        </label>
+                <label for="check_out">
+                    CHECK-OUT
+                </label>
 
-                        <input
-                            type="date"
-                            required
-                        />
+                <input
+                    type="date"
+                    id="check_out"
+                    name="check_out"
+                    required
+                >
 
-                    </div>
-
-
-                    <div class="input-group">
-
-                        <label>
-                            GUESTS
-                        </label>
+            </div>
 
 
-                        <select>
+            <!-- Guests -->
+            <div class="input-group">
 
-                            <?php for ($i = 1; $i <= $capacity; $i++): ?>
+                <label for="num_guests">
+                    GUESTS
+                </label>
 
-                                <option>
+                <select
+                    id="num_guests"
+                    name="num_guests"
+                    required
+                >
 
-                                    <?= $i ?>
+                    <?php for ($i = 1; $i <= $capacity; $i++): ?>
 
-                                    <?= $i === 1 ? 'Guest' : 'Guests' ?>
+                        <option value="<?= $i ?>">
 
-                                </option>
+                            <?= $i ?>
+                            <?= $i === 1 ? 'Guest' : 'Guests' ?>
 
-                            <?php endfor; ?>
+                        </option>
 
-                        </select>
+                    <?php endfor; ?>
 
-                    </div>
+                </select>
+
+            </div>
 
 
-                    <button
-                        type="submit"
-                        class="instant-book-btn"
-                    >
-                        PROCEED TO CONFIRM
-                    </button>
+            <!-- Guest Name -->
+            <div class="input-group">
 
-                </form>
+                <label for="guest_name">
+                    FULL NAME
+                </label>
+
+                <input
+                    type="text"
+                    id="guest_name"
+                    name="guest_name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Guest Email -->
+            <div class="input-group">
+
+                <label for="guest_email">
+                    EMAIL
+                </label>
+
+                <input
+                    type="email"
+                    id="guest_email"
+                    name="guest_email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Guest Phone -->
+            <div class="input-group">
+
+                <label for="guest_phone">
+                    PHONE
+                </label>
+
+                <input
+                    type="tel"
+                    id="guest_phone"
+                    name="guest_phone"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="instant-book-btn"
+            >
+                CONFIRM BOOKING
+            </button>
+
+        </form>
+
+
+        <div class="card-guarantee">
+
+            <p>
+                <i class="fa-solid fa-shield-halved"></i>
+                Best Price Guarantee
+            </p>
+
+            <p>
+                <i class="fa-solid fa-rotate-left"></i>
+                Free cancellation up to 48 hours prior
+            </p>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+                
+
 
 
                 <div class="card-guarantee">
