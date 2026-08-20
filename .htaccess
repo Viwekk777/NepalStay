@@ -1,13 +1,10 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
+RewriteEngine On
 
-    # Prevent direct browser access to sensitive root files
-    <FilesMatch "^\.env|\.gitignore|composer\.(json|lock)$">
-        Require all denied
-    </FilesMatch>
+# Stop rewrite rules for actual physical files (CSS, JS, Images)
 
-    # Forward all web traffic into the Public directory
-    RewriteCond %{REQUEST_URI} !^/Public/
-    RewriteRule ^(.*)$ Public/$1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 
-</IfModule>
+# Send all other page requests to your index.php router
+
+RewriteRule ^(.\*)$ index.php [QSA,L]

@@ -1,0 +1,35 @@
+<div class="rooms">
+  <?php foreach ($rooms as $room): ?>
+
+  <a href="/room?id=<?= $room['id'] ?>">
+    <div class="room">
+      <?php if (!empty($room['main_image'])): ?>
+      <img
+        src="<?= htmlspecialchars($room['main_image']) ?>"
+        alt="<?= htmlspecialchars($room['title']) ?>"
+      />
+      <?php endif; ?>
+
+      <div class="contents">
+        <div class="number">
+          <?= htmlspecialchars($room['capacity']) ?> GUESTS
+        </div>
+
+        <h1><?= htmlspecialchars($room['title']) ?></h1>
+
+        <p><?= htmlspecialchars($room['description']) ?></p>
+
+        <div class="price-row">
+          <div class="price">
+            <h1>NPR <?= htmlspecialchars($room['price']) ?></h1>
+            <h3>/night</h3>
+          </div>
+
+          <div class="view-details">VIEW DETAILS</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <?php endforeach; ?>
+</div>
