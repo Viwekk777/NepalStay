@@ -4,42 +4,26 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 use App\Models\Rooms;
+//use App\Exceptions\RoomNotFoundException;
 
 class HomeController
 
 
 {
-    private Rooms $rooms;
-    public function __construct(Rooms $rooms)
+    public function __construct(private Rooms $rooms)
     {
         $this->rooms = $rooms;
     }
-    
-    public function rooms()
-    {
-      $rooms = $this->rooms->getAllRooms();
-      require_once __DIR__ .'/../../Views/rooms.php';
-
-    }
     public function home()
+{
+    $rooms = $this->rooms->getAllRooms();
+
+    require_once __DIR__ .'/../../Views/Home.php';
+}
+
+    public function about()
     {
-        $rooms = $this->rooms->getAllRooms();
-        
+           require_once __DIR__ .'/../../Views/about.php';
 
-
-
-
-       require_once __DIR__ .'/../../Views/Home.php';
-    }
-    public function getImages()
-    {
-
-    }
-    public function getRoomById()
-    {
-
-
-    $this->getImages();
-    require_once __DIR__ .'/../../Views/roomdetial.php';
     }
 }

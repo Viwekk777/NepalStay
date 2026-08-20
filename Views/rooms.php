@@ -24,7 +24,7 @@
 
     <?php foreach ($rooms as $room): ?>
 
-        <a href="/room?id=<?= (int) $room['id'] ?>">
+        <a href="/room?room_id=<?= (int) $room['id'] ?>">
 
             <div class="room">
                

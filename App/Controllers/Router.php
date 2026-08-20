@@ -45,9 +45,18 @@ class Router
 
         // Ensure leading slash and normalize route path
         $path = '/' . trim($path, '/');
+       
         $method = strtoupper($requestMethod);
 
+
+
+
+      
         $action = $this->routes[$method][$path] ?? null;
+
+[$class, $methodName] = $action;
+
+
 
         if (!$action) {
             throw new RouteNotFoundException();
@@ -62,6 +71,11 @@ class Router
 
             if ($class && class_exists($class)) {
                 $object = $this->container->get($class);
+                [$class, $methodName] = $action;
+
+$object = $this->container->get($class);
+
+
 
                 if (method_exists($object, $methodName)) {
                     return call_user_func_array([$object, $methodName], []);

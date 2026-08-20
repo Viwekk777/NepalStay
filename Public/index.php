@@ -6,6 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Container;
 use App\Controllers\Router;
 use App\Controllers\HomeController;
+use App\Controllers\RoomController;
 use App\Models\DB;
 use App\Models\Rooms;
 
@@ -27,12 +28,15 @@ $container->set(DB::class, fn() => new DB
 $router = new Router($container);
 
 $router->registerRoutes('GET','/',[HomeController::class,'home']);
-$router->registerRoutes('GET', '/index', [HomeController::class, 'index']);
-$router->registerRoutes(
-    'GET',
-    '/rooms',
-    [HomeController::class, 'rooms']
-);
+
+$router->registerRoutes('GET','/rooms',[RoomController::class, 'rooms']);
+$router->registerRoutes('GET', '/room', [RoomController::class, 'getRoom']);//
+
+$router->registerRoutes('GET','/about', [HomeController::class,'about']);
+
+
+
+
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
