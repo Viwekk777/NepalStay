@@ -1,0 +1,75 @@
+/* NepalStay unified main stylesheet
+   Clean, modern, responsive design for nav, hero, rooms, forms, details, contact, footer
+*/
+:root{
+  --bg:#0b1220;
+  --card:#ffffff;
+  --accent:#ff6b35;
+  --accent-2:#ffd166;
+  --muted:#9aa6b2;
+  --text:#071124;
+  --glass: rgba(255,255,255,0.06);
+  --nav-height:72px;
+  --radius:10px;
+  --max-width:1200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);}
+a{color:inherit;text-decoration:none}
+.container{max-width:var(--max-width);margin:0 auto;padding:0 1rem}
+/* sensible default for images */
+img{max-width:100%;height:auto;display:block}
+
+/* NAV */
+.site-header{position:fixed;left:0;right:0;top:0;height:var(--nav-height);display:flex;align-items:center;background:linear-gradient(180deg, rgba(11,18,32,0.6), rgba(11,18,32,0.85));backdrop-filter:blur(6px);z-index:60}
+.site-header .container{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:0.75rem}
+.brand img{height:48px;width:48px;object-fit:contain;border-radius:8px}
+.nav-links{display:flex;gap:0.6rem;align-items:center}
+.nav-links a{padding:0.45rem 0.6rem;border-radius:6px;color:var(--accent-2);font-weight:600}
+.nav-links a.primary{background:var(--accent);color:#fff}
+/* HERO */
+/* HERO */
+.hero-inner{max-width:1100px;margin:0 auto}
+.hero-inner{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4rem 1rem}
+.hero h1{font-size:clamp(1.6rem,3.2vw,2.8rem);color:var(--accent-2);margin-bottom:0.6rem}
+.hero p{max-width:760px;color:var(--accent-2);opacity:0.95}
+.hero .cta{margin-top:1.25rem;display:flex;gap:0.75rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:0.6rem 1rem;border-radius:8px;font-weight:700;border:0;cursor:pointer}
+.btn.primary{background:var(--accent);color:white}
+.btn.ghost{background:transparent;border:2px solid rgba(255,255,255,0.06);color:var(--accent-2)}
+/* AVAILABILITY BAR */
+.avail{margin-top:1.5rem;background:rgba(255,255,255,0.04);padding:1rem;border-radius:10px;display:flex;gap:1rem;align-items:center;justify-content:center;flex-wrap:wrap}
+.avail .field{display:flex;flex-direction:column;min-width:160px}
+.avail label{font-size:0.75rem;color:var(--accent-2);margin-bottom:0.35rem}
+.avail input, .avail select{padding:0.6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--accent-2)}
+/* ROOMS GRID */
+.rooms-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:2rem 0}
+.card{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 20px rgba(2,6,23,0.35);display:flex;flex-direction:column;height:380px}
+.card .media{height:48%;width:100%;overflow:hidden}
+.card .media img{width:100%;height:100%;object-fit:cover;display:block;max-height:240px}
+.card .body{padding:1rem;display:flex;flex-direction:column;gap:0.6rem;flex:1;min-height:0}
+.card h3{font-size:1.05rem;margin-bottom:0.2rem;color:var(--text);line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card p{color:var(--muted);font-size:0.95rem;line-height:1.3;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+.price{font-weight:800;color:var(--accent)}
+.view{padding:0.5rem 0.7rem;border-radius:6px;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+/* AUTH CARD (login/register) */
+.auth-wrap{display:flex;align-items:center;justify-content:center;padding:6rem 1rem}
+.auth-card{width:100%;max-width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:2rem;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+.auth-card h2{color:var(--accent);margin-bottom:0.75rem}
+.form-row{display:flex;flex-direction:column;gap:0.6rem}
+.input{padding:0.6rem;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:var(--text)}
+.form-actions{display:flex;gap:0.75rem;margin-top:0.5rem}
+/* ROOM DETAIL */
+.detail{display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;padding:2rem 0}
+.detail .gallery img{width:100%;height:auto;max-height:480px;object-fit:cover;border-radius:8px}
+.detail .thumbs{display:flex;gap:0.5rem;margin-top:0.75rem}
+.detail .thumbs img{width:80px;height:60px;object-fit:cover;border-radius:6px;cursor:pointer}
+/* Footer */
+.site-footer{background:#06101a;padding:2.5rem 0;color:rgba(255,255,255,0.85)}
+.site-footer .container{display:flex;gap:2rem;align-items:flex-start}
+.site-footer h4{color:var(--accent-2);margin-bottom:0.5rem}
+/* Responsiveness */
+@media (max-width:1024px){.rooms-grid{grid-template-columns:repeat(2,1fr)}.detail{grid-template-columns:1fr 1fr}}
+@media (max-width:720px){.rooms-grid{grid-template-columns:1fr}.site-header .container{padding:0 0.5rem}.hero-inner{padding:2rem}.detail{grid-template-columns:1fr} .detail .gallery img{height:auto}}

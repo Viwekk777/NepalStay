@@ -20,6 +20,20 @@
         referrerpolicy="no-referrer"
     />
 </head>
+<body>
+<nav id="nav">
+    <a href="/" id="logo">
+        <img src="/Assets/images/logo.png" alt="NepalStay Logo">
+    </a>
+    <div id="links">
+        <a href="/">HOME</a>
+        <a href="/rooms">ROOMS</a>
+        <a href="/about">ABOUT</a>
+        <a href="/contact">CONTACT</a>
+        <a href="/register">REGISTER</a>
+        <a href="/login">LOGIN</a>
+    </div>
+</nav>
 <div class="rooms">
 
     <?php foreach ($rooms as $room): ?>
@@ -64,6 +78,8 @@
                         </div>
 
                     </div>
+                    </body>
+                    </html>
 
                 </div>
 

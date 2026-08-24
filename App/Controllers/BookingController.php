@@ -165,8 +165,21 @@ class BookingController
         );
 
         $guestName = $_POST['guest_name'] ?? null;
-        $guestEmail = $_POST['guest_email'] ?? null;
-        $guestPhone = $_POST['guest_phone'] ?? null;
+        $inputPhone = $_POST['guest_phone'] ?? null;
+       $guestPhone = $inputPhone;
+
+if (!preg_match('/^\+?[0-9]{7,15}$/', $guestPhone)) {
+    throw new InvalidArgumentException('Invalid phone number.');
+}
+        $inputEmail = $_POST['guest_email'] ?? null;
+    $inputEmail = $_POST['guest_email'] ?? null;
+
+$guestEmail = $inputEmail;
+
+if (!filter_var($guestEmail, FILTER_VALIDATE_EMAIL)) {
+    throw new InvalidArgumentException('Invalid email address.');
+}
+       
 
         if (
             $roomId === false ||

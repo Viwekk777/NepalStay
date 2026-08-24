@@ -14,17 +14,31 @@ public function getAllRooms(): array
     $pdo = $this->pdo;
 
     $stmt = $pdo->query(
-        "SELECT rooms.id, rooms.title, rooms.price, rooms.capacity,
-                rooms.description,
-                room_images.image_path AS main_image
-         FROM rooms
-         LEFT JOIN room_images
-            ON rooms.id = room_images.room_id
-            AND room_images.is_primary = 1
-         ORDER BY rooms.id ASC"
+        "SELECT
+            rooms.id,
+            rooms.title,
+            rooms.price,
+            rooms.capacity,
+            rooms.description,
+            (
+                SELECT ri.image_path
+                FROM room_images ri
+                WHERE ri.room_id = rooms.id
+                ORDER BY ri.is_primary DESC, ri.id ASC
+                LIMIT 1
+            ) AS main_image
+        FROM rooms
+        ORDER BY rooms.id ASC"
     );
 
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $rooms = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ($rooms as &$room) {
+        $room['main_image'] = $this->normalizeImagePath($room['main_image'] ?? null);
+    }
+    unset($room);
+
+    return $rooms;
 
 }
     
@@ -55,7 +69,45 @@ public function getRoomImages(int $id): array
 
     $stmt->execute(['room_id' => $id]);
 
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ($images as &$image) {
+        $image['image_path'] = $this->normalizeImagePath($image['image_path'] ?? null);
+    }
+    unset($image);
+
+    return $images;
+}
+
+private function normalizeImagePath(?string $path): ?string
+{
+    if ($path === null || trim($path) === '') {
+        return $path;
+    }
+
+    $normalized = str_replace('\\', '/', trim($path));
+
+    if (preg_match('#^https?://#i', $normalized) === 1) {
+        return $normalized;
+    }
+
+    if (str_starts_with($normalized, '/Assets/images/')) {
+        return $normalized;
+    }
+
+    if (str_starts_with($normalized, 'Assets/images/')) {
+        return '/' . $normalized;
+    }
+
+    if (str_starts_with($normalized, '/images/')) {
+        return '/Assets' . $normalized;
+    }
+
+    if (str_starts_with($normalized, 'images/')) {
+        return '/Assets/' . $normalized;
+    }
+
+    return '/Assets/images/' . ltrim(basename($normalized), '/');
 }
 
 

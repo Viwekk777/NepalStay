@@ -8,8 +8,12 @@ use App\Controllers\BookingController;
 use App\Controllers\Router;
 use App\Controllers\HomeController;
 use App\Controllers\RoomController;
+use App\Controllers\UserController;
 use App\Models\DB;
+use App\Models\User;
 use App\Models\Rooms;
+use App\Services\Mailer;
+use PDO;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
@@ -23,6 +27,10 @@ $container->set(DB::class, fn() => new DB
 
 ));
 
+$container->set(PDO::class, fn(Container $c) => $c->get(DB::class)->getConnection());
+$container->set(User::class, fn(Container $c) => new User($c->get(PDO::class)));
+$container->set(Mailer::class, fn() => new Mailer());
+
 
 
 
@@ -35,8 +43,12 @@ $router->registerRoutes('GET', '/room', [RoomController::class, 'getRoom']);
 $router->registerRoutes('GET','/about', [HomeController::class,'about']);
 $router->registerRoutes('GET','/book', [BookingController::class,'book']);
 $router->registerRoutes('POST','/booking', [BookingController::class,'booked']);
-$router->registerRoutes('POST','/availability',[BookingController::class, 'checkAvailability']
-);
+$router->registerRoutes('POST','/availability',[BookingController::class, 'checkAvailability']);
+$router->registerRoutes('GET','/register', [UserController::class, 'register']);
+$router->registerRoutes('POST','/register', [UserController::class, 'register']);
+$router->registerRoutes('GET','/login', [UserController::class, 'login']);
+$router->registerRoutes('GET','/verify', [UserController::class, 'verifyUser']);
+$router->registerRoutes('POST','/verify', [UserController::class, 'verifyUser']);
 
 
 

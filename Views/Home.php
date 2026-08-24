@@ -25,7 +25,7 @@
 
         <a href="/" id="logo">
           <img
-            src="/images/ChatGPT Image May 29, 2026, 08_27_52 PM.png"
+            src="/Assets/images/logo.png"
             alt=""
           />
         </a>
@@ -35,6 +35,8 @@
           <a href="/rooms">ROOMS</a>
           <a href="/about">ABOUT</a>
           <a href="/contact">CONTACT</a>
+          <a href="/register">REGISTER</a>
+          <a href="/login">LOGIN</a>
         </div>
 
       </nav>

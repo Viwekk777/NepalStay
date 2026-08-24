@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact Us - NepalStay Project</title>
     <!-- Link directly into your global master stylesheet -->
-    <link rel="stylesheet" href="Assets/CSS/contact.css" />
+    <link rel="stylesheet" href="/Assets/CSS/style.css" />
 
     <link
       rel="stylesheet"
@@ -18,15 +18,17 @@
       <nav id="nav">
         <a href="index.html" id="logo">
           <img
-            src="images/ChatGPT Image May 29, 2026, 08_27_52 PM.png"
+            src="/Assets/images/logo.png"
             alt="NepalStay Logo"
           />
         </a>
         <div id="links">
-          <a href="index.html">HOME</a>
-          <a href="rooms.html">ROOMS</a>
-          <a href="about.html">ABOUT</a>
-          <a href="contact.html" class="active-page">CONTACT</a>
+          <a href="/">HOME</a>
+          <a href="/rooms">ROOMS</a>
+          <a href="/about">ABOUT</a>
+          <a href="/contact" class="active-page">CONTACT</a>
+          <a href="/register">REGISTER</a>
+          <a href="/login">LOGIN</a>
         </div>
       </nav>
     </div>

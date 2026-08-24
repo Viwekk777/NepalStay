@@ -19,7 +19,7 @@
   height: 45vh;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)),
-    url("../images/bg.jpg");
+    url("/Assets/images/bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

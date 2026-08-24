@@ -4,9 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About Us - Nepal Stay Project</title>
-    <link rel="stylesheet" href="Assets/CSS/style.css" />
-    <link rel="stylesheet" href="Assets/CSS/style.css" />
-    <script src="JS/main.js"></script>
+    <link rel="stylesheet" href="/Assets/CSS/style.css" />
+    <script src="/Assets/JS/main.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
@@ -20,15 +19,17 @@
       <nav id="nav">
         <a href="index.html" id="logo">
           <img
-            src="images/ChatGPT Image May 29, 2026, 08_27_52 PM.png"
+            src="/Assets/images/logo.png"
             alt="NepalStay Logo"
           />
         </a>
         <div id="links">
-          <a href="index.html">HOME</a>
-          <a href="rooms.html">ROOMS</a>
-          <a href="about.html" class="active-page">ABOUT</a>
-          <a href="contact.html">CONTACT</a>
+          <a href="/">HOME</a>
+          <a href="/rooms">ROOMS</a>
+          <a href="/about" class="active-page">ABOUT</a>
+          <a href="/contact">CONTACT</a>
+          <a href="/register">REGISTER</a>
+          <a href="/login">LOGIN</a>
         </div>
       </nav>
 
@@ -57,7 +58,7 @@
           </p>
         </div>
         <div class="story-image">
-          <img src="images/bg.jpg" alt="Our Heritage" />
+          <img src="/Assets/images/bg.jpg" alt="Our Heritage" />
         </div>
       </div>
     </section>

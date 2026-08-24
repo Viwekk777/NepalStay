@@ -17,8 +17,7 @@ $amenities = is_string($amenities)
         <?= htmlspecialchars($title) ?> - Nepal Stay Project
     </title>
 
-    <link rel="stylesheet" href="../Assets/CSS/annapurna.css" />
-    <link rel="stylesheet" href="../Assets/CSS/style.css" />
+    <link rel="stylesheet" href="/Assets/CSS/style.css" />
 
     <link
         rel="stylesheet"
@@ -37,7 +36,7 @@ $amenities = is_string($amenities)
 
             <a href="/" id="logo">
                 <img
-                    src="../images/ChatGPT Image May 29, 2026, 08_27_52 PM.png"
+                    src="/Assets/images/logo.png"
                     alt="NepalStay Logo"
                 />
             </a>
