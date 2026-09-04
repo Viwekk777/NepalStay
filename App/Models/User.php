@@ -59,4 +59,37 @@ throw $e;
 
         return $stmt->fetchColumn() !== false;
     }
+
+    public function findByEmail(string $email): ?array
+    {
+        $sql = 'SELECT * FROM users WHERE email = :email LIMIT 1';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $user === false ? null : $user;
+    }
+
+    public function findById(int $id): ?array
+    {
+        $sql = 'SELECT * FROM users WHERE id = :id LIMIT 1';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $user === false ? null : $user;
+    }
+
+    public function updateProfile(int $id, string $name, string $email, string $phone): void
+    {
+        $sql = 'UPDATE users
+                SET name = :name, email = :email, phone = :phone
+                WHERE id = :id';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':id' => $id,
+            ':name' => $name,
+            ':email' => $email,
+            ':phone' => $phone,
+        ]);
+    }
 }

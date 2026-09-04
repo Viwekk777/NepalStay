@@ -34,62 +34,96 @@ class Booking
         return (int) $stmt->fetchColumn() === 0;
     }
    public function createBooking(
-    int $roomId,
-    string $guestName,
-    string $guestEmail,
-    string $guestPhone,
-    int $numGuests,
-    DateTime $checkIn,
-    DateTime $checkOut,
-    float $totalPrice
-): bool {
+       int $roomId,
+       string $guestName,
+       string $guestEmail,
+       string $guestPhone,
+       int $numGuests,
+       DateTime $checkIn,
+       DateTime $checkOut,
+       float $totalPrice,
+       ?int $userId
+   ): int {
 
     $sql = "INSERT INTO bookings
             (room_id, guest_name, guest_email, guest_phone,
-             num_guests, check_in, check_out, total_price, status)
+             num_guests, check_in, check_out, total_price, status, user_id)
             VALUES
             (:room_id, :guest_name, :guest_email, :guest_phone,
-             :num_guests, :check_in, :check_out, :total_price, 'pending')";
+             :num_guests, :check_in, :check_out, :total_price, 'pending', :user_id)";
 
-    $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-    return $stmt->execute([
-        'room_id'     => $roomId,
-        'guest_name'  => $guestName,
-        'guest_email' => $guestEmail,
-        'guest_phone' => $guestPhone,
-        'num_guests'  => $numGuests,
-        'check_in'    => $checkIn->format('Y-m-d'),
-        'check_out'   => $checkOut->format('Y-m-d'),
-        'total_price' => $totalPrice
-    ]);
-}
-public function getBookingById(int $bookingId): array|false
-{
-    $sql = "SELECT
-                bookings.id,
-                bookings.room_id,
-                rooms.title AS room_title,
-                bookings.guest_name,
-                bookings.guest_email,
-                bookings.guest_phone,
-                bookings.num_guests,
-                bookings.check_in,
-                bookings.check_out,
-                bookings.total_price,
-                bookings.status,
-                bookings.created_at
-            FROM bookings
-            INNER JOIN rooms
-                ON bookings.room_id = rooms.id
-            WHERE bookings.id = :id";
+        $stmt->execute([
+            'user_id'    => $userId,
+            'room_id'     => $roomId,
+            'guest_name'  => $guestName,
+            'guest_email' => $guestEmail,
+            'guest_phone' => $guestPhone,
+            'num_guests'  => $numGuests,
+            'check_in'    => $checkIn->format('Y-m-d'),
+            'check_out'   => $checkOut->format('Y-m-d'),
+            'total_price' => $totalPrice
+        ]);
 
-    $stmt = $this->pdo->prepare($sql);
+        return (int) $this->pdo->lastInsertId();
+    }
 
-    $stmt->execute([
-        'id' => $bookingId
-    ]);
+    public function getBookingById(int $bookingId): array|false
+    {
+        $sql = "SELECT
+                    bookings.id,
+                    bookings.room_id,
+                    rooms.title AS room_title,
+                    bookings.guest_name,
+                    bookings.guest_email,
+                    bookings.guest_phone,
+                    bookings.num_guests,
+                    bookings.check_in,
+                    bookings.check_out,
+                    bookings.total_price,
+                    bookings.status,
+                    bookings.user_id,
+                    bookings.created_at
+                FROM bookings
+                INNER JOIN rooms
+                    ON bookings.room_id = rooms.id
+                WHERE bookings.id = :id";
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            'id' => $bookingId
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getBookingsByUserId(int $userId): array
+    {
+        $sql = "SELECT
+                    bookings.id,
+                    bookings.room_id,
+                    rooms.title AS room_title,
+                    bookings.guest_name,
+                    bookings.guest_email,
+                    bookings.guest_phone,
+                    bookings.num_guests,
+                    bookings.check_in,
+                    bookings.check_out,
+                    bookings.total_price,
+                    bookings.status,
+                    bookings.user_id,
+                    bookings.created_at
+                FROM bookings
+                INNER JOIN rooms
+                    ON bookings.room_id = rooms.id
+                WHERE bookings.user_id = :user_id
+                ORDER BY bookings.created_at DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['user_id' => $userId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

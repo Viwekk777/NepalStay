@@ -28,7 +28,6 @@ class DB
                 PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION
             );
-            echo "connection successful";
         } catch (PDOException $e) {
             throw new PDOException($e->getMessage(), (int) $e->getCode());
         }

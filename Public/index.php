@@ -2,6 +2,19 @@
 
 declare(strict_types=1);
 
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Container;
 use App\Controllers\BookingController;
@@ -10,10 +23,10 @@ use App\Controllers\HomeController;
 use App\Controllers\RoomController;
 use App\Controllers\UserController;
 use App\Models\DB;
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\Rooms;
 use App\Services\Mailer;
-use PDO;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
@@ -29,6 +42,7 @@ $container->set(DB::class, fn() => new DB
 
 $container->set(PDO::class, fn(Container $c) => $c->get(DB::class)->getConnection());
 $container->set(User::class, fn(Container $c) => new User($c->get(PDO::class)));
+$container->set(Booking::class, fn(Container $c) => new Booking($c->get(DB::class)));
 $container->set(Mailer::class, fn() => new Mailer());
 
 
@@ -47,6 +61,19 @@ $router->registerRoutes('POST','/availability',[BookingController::class, 'check
 $router->registerRoutes('GET','/register', [UserController::class, 'register']);
 $router->registerRoutes('POST','/register', [UserController::class, 'register']);
 $router->registerRoutes('GET','/login', [UserController::class, 'login']);
+$router->registerRoutes('POST','/login', [UserController::class, 'login']);
+// Logout should be a POST route to avoid accidental logouts via links
+$router->registerRoutes('POST','/logout', [UserController::class, 'logout']);
+$router->registerRoutes('GET','/logout', [UserController::class, 'logout']);
+
+$router->registerRoutes('GET','/profile', [UserController::class, 'profile']);
+$router->registerRoutes('GET','/my-bookings', [UserController::class, 'myBookings']);
+$router->registerRoutes('GET','/edit-profile', [UserController::class, 'editProfile']);
+$router->registerRoutes('POST','/edit-profile', [UserController::class, 'editProfile']);
+$router->registerRoutes('GET','/verify-email-change', [UserController::class, 'verifyEmailChange']);
+$router->registerRoutes('POST','/verify-email-change', [UserController::class, 'verifyEmailChange']);
+
+
 $router->registerRoutes('GET','/verify', [UserController::class, 'verifyUser']);
 $router->registerRoutes('POST','/verify', [UserController::class, 'verifyUser']);
 

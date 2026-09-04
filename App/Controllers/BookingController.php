@@ -85,7 +85,8 @@ class BookingController
         string $guestPhone,
         int $numGuests,
         DateTime $checkIn,
-        DateTime $checkOut
+        DateTime $checkOut,
+        ?int $userId
     ): array {
 
         if (
@@ -124,7 +125,8 @@ class BookingController
             $numGuests,
             $checkIn,
             $checkOut,
-            $totalPrice
+            $totalPrice,
+            $userId
         );
 
         if (!$bookingId) {
@@ -166,20 +168,22 @@ class BookingController
 
         $guestName = $_POST['guest_name'] ?? null;
         $inputPhone = $_POST['guest_phone'] ?? null;
-       $guestPhone = $inputPhone;
+        $guestPhone = $inputPhone;
 
-if (!preg_match('/^\+?[0-9]{7,15}$/', $guestPhone)) {
-    throw new InvalidArgumentException('Invalid phone number.');
-}
+        if (!preg_match('/^\+?[0-9]{7,15}$/', $guestPhone)) {
+            throw new InvalidArgumentException('Invalid phone number.');
+        }
         $inputEmail = $_POST['guest_email'] ?? null;
-    $inputEmail = $_POST['guest_email'] ?? null;
+        $guestEmail = $inputEmail;
 
-$guestEmail = $inputEmail;
+        if (!filter_var($guestEmail, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException('Invalid email address.');
+        }
 
-if (!filter_var($guestEmail, FILTER_VALIDATE_EMAIL)) {
-    throw new InvalidArgumentException('Invalid email address.');
-}
-       
+        $userId = $_SESSION['user_id'] ?? null;
+        if ($userId !== null) {
+            $userId = (int) $userId;
+        }
 
         if (
             $roomId === false ||
@@ -213,7 +217,8 @@ if (!filter_var($guestEmail, FILTER_VALIDATE_EMAIL)) {
             $guestPhone,
             $numGuests,
             $checkInDate,
-            $checkOutDate
+            $checkOutDate,
+            $userId
         );
 
         require_once __DIR__ . '/../../Views/Booked.php';

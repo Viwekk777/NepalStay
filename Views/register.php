@@ -19,6 +19,8 @@
 
 <body>
 
+    <?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); if ($base === '/' || $base === '.') $base = ''; ?>
+
     <main class="auth-main">
         <section class="auth-card">
 
@@ -36,7 +38,7 @@ Create Your NepalStay Account
 
         <form
             class="auth-form"
-            action="/register"
+            action="<?= htmlspecialchars($base . '/register', ENT_QUOTES, 'UTF-8') ?>"
             method="POST"
                 >
 
@@ -123,7 +125,8 @@ Confirm Password
         <p class="auth-note">
 Already have an account?
 
-            <a href="/login">
+            <?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); if ($base === '/' || $base === '.') $base = ''; ?>
+            <a href="<?= htmlspecialchars($base . '/login', ENT_QUOTES, 'UTF-8') ?>">
     Login
             </a>
         </p>

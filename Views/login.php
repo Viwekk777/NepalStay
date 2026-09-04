@@ -9,11 +9,13 @@
 </head>
 
 <body>
+
+    <?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); if ($base === '/' || $base === '.') $base = ''; ?>
     <main class="auth-main">
         <section class="auth-card">
         <h1>Login to NepalStay</h1>
 
-        <form class="auth-form" action="/login" method="POST">
+        <form class="auth-form" action="<?= htmlspecialchars($base . '/login', ENT_QUOTES, 'UTF-8') ?>" method="POST">
             <div class="auth-field">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
@@ -29,7 +31,8 @@
 
         <p class="auth-note">
             Don't have an account?
-            <a href="/register">Register</a>
+            <?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); if ($base === '/' || $base === '.') $base = ''; ?>
+            <a href="<?= htmlspecialchars($base . '/register', ENT_QUOTES, 'UTF-8') ?>">Register</a>
         </p>
         </section>
     </main>

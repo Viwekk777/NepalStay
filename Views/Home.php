@@ -1,3 +1,4 @@
+<?php use App\Auth; ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -29,7 +30,17 @@
             alt=""
           />
         </a>
+          <?php if (Auth::check()===true): ?>
 
+            <div id="links">
+              <a href="/">HOME</a>
+              <a href="/rooms">ROOMS</a>
+              <a href="/about">ABOUT</a>
+              <a href="/contact">CONTACT</a>
+              <a href="/logout">LOGOUT</a>
+                <a href="/profile">PROFILE</a>
+            </div>
+          <?php else :?>
         <div id="links">
           <a href="/">HOME</a>
           <a href="/rooms">ROOMS</a>
@@ -38,6 +49,7 @@
           <a href="/register">REGISTER</a>
           <a href="/login">LOGIN</a>
         </div>
+          <?php endif; ?>
 
       </nav>
 

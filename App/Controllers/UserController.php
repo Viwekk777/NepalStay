@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Models\Booking;
 use App\Services\Mailer;
+use App\Auth;
 
 class UserController
 {
     public function __construct(
         private User $user,
-        private Mailer $mailer
+        private Mailer $mailer,
+        private Booking $booking
     ) {
     }
 
@@ -197,6 +200,227 @@ class UserController
 
     public function login(): void
     {
-        require_once __DIR__ . '/../../Views/login.php';
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            require_once __DIR__ . '/../../Views/login.php';
+            return;
+        }
+
+        $email = trim((string) ($_POST['email'] ?? ''));
+        $password = (string) ($_POST['password'] ?? '');
+        $errors = [];
+        $old = ['email' => $email];
+
+        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Please enter a valid email address.';
+        }
+        if ($password === '') {
+            $errors['password'] = 'Password is required.';
+        }
+
+        if (!empty($errors)) {
+            require_once __DIR__ . '/../../Views/login.php';
+            return;
+        }
+
+        $user = $this->user->findByEmail($email);
+        if (!is_array($user) || !isset($user['password_hash'])) {
+            $errors['email'] = 'Invalid email or password.';
+            require_once __DIR__ . '/../../Views/login.php';
+            return;
+        }
+
+        if (!password_verify($password, (string) $user['password_hash'])) {
+            $errors['email'] = 'Invalid email or password.';
+            require_once __DIR__ . '/../../Views/login.php';
+            return;
+        }
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        session_regenerate_id(true);
+        $_SESSION['user_id'] = (int) $user['id'];
+        header('Location: /');
+        exit();
+
+    }
+
+    public function profile(): void
+    {
+        // index.php starts the session centrally; use Auth helper
+        if (!Auth::check()) {
+            header('Location: /login');
+            exit();
+        }
+
+        $userId = Auth::userId();
+        $user = null;
+        if ($userId !== null) {
+            $user = $this->user->findById($userId);
+        }
+
+        // Expose $user to the view
+        require_once __DIR__ . '/../../Views/profile.php';
+    }
+
+    public function myBookings(): void
+    {
+        if (!Auth::check()) {
+            header('Location: /login');
+            exit();
+        }
+
+        $userId = Auth::userId();
+        $user = $userId !== null ? $this->user->findById($userId) : null;
+        $bookings = $userId !== null ? $this->booking->getBookingsByUserId($userId) : [];
+
+        require_once __DIR__ . '/../../Views/my-bookings.php';
+    }
+
+    public function editProfile(): void
+    {
+        if (!Auth::check()) {
+            header('Location: /login');
+            exit();
+        }
+
+        $userId = Auth::userId();
+        if ($userId === null) {
+            header('Location: /login');
+            exit();
+        }
+
+        $user = $this->user->findById($userId);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            require_once __DIR__ . '/../../Views/edit-profile.php';
+            return;
+        }
+
+        $name = trim((string) ($_POST['name'] ?? ''));
+        $email = trim((string) ($_POST['email'] ?? ''));
+        $phone = trim((string) ($_POST['phone'] ?? ''));
+
+        $errors = [];
+
+        if ($name === '') {
+            $errors['name'] = 'Name is required.';
+        }
+
+        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Please enter a valid email address.';
+        }
+
+        if ($phone === '') {
+            $errors['phone'] = 'Phone number is required.';
+        }
+
+        if (!empty($errors)) {
+            require_once __DIR__ . '/../../Views/edit-profile.php';
+            return;
+        }
+
+        if ($user !== null && isset($user['email']) && $email !== (string) $user['email']) {
+            $verificationCode = (string) random_int(100000, 999999);
+            $_SESSION['pending_profile_update'] = [
+                'user_id' => $userId,
+                'name' => $name,
+                'phone' => $phone,
+                'new_email' => $email,
+                'verification_code' => $verificationCode,
+            ];
+
+            $this->mailer->sendVerificationCode($email, $verificationCode);
+            header('Location: /verify-email-change');
+            exit();
+        }
+
+        $this->user->updateProfile($userId, $name, $email, $phone);
+
+        header('Location: /profile');
+        exit();
+    }
+
+    public function verifyEmailChange(): void
+    {
+        if (!Auth::check()) {
+            header('Location: /login');
+            exit();
+        }
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $pending = $_SESSION['pending_profile_update'] ?? null;
+        if (!is_array($pending)) {
+            header('Location: /profile');
+            exit();
+        }
+
+        $errors = [];
+        $old = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            require_once __DIR__ . '/../../Views/verify-email-change.php';
+            return;
+        }
+
+        $otp = trim((string) ($_POST['otp'] ?? ''));
+        $old['otp'] = $otp;
+
+        if ($otp === '' || preg_match('/^\d{6}$/', $otp) !== 1) {
+            $errors['otp'] = 'Please enter a valid 6-digit OTP.';
+            require_once __DIR__ . '/../../Views/verify-email-change.php';
+            return;
+        }
+
+        if (!hash_equals((string) ($pending['verification_code'] ?? ''), $otp)) {
+            $errors['otp'] = 'Invalid verification code.';
+            require_once __DIR__ . '/../../Views/verify-email-change.php';
+            return;
+        }
+
+        $this->user->updateProfile(
+            (int) $pending['user_id'],
+            (string) $pending['name'],
+            (string) $pending['new_email'],
+            (string) $pending['phone']
+        );
+
+        unset($_SESSION['pending_profile_update']);
+        header('Location: /profile');
+        exit();
+    }
+
+    public function logout(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+
+        $_SESSION = [];
+
+
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(),
+                '',
+                time() - 42000,
+                $params['path'] ?? '/',
+                $params['domain'] ?? '',
+                $params['secure'] ?? false,
+                $params['httponly'] ?? true
+            );
+        }
+
+
+        session_destroy();
+
+
+        header('Location: /login');
+        exit();
     }
 }
