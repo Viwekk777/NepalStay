@@ -18,6 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Container;
 use App\Controllers\BookingController;
+use App\Controllers\AdminController;
 use App\Controllers\Router;
 use App\Controllers\HomeController;
 use App\Controllers\RoomController;
@@ -72,12 +73,10 @@ $router->registerRoutes('GET','/edit-profile', [UserController::class, 'editProf
 $router->registerRoutes('POST','/edit-profile', [UserController::class, 'editProfile']);
 $router->registerRoutes('GET','/verify-email-change', [UserController::class, 'verifyEmailChange']);
 $router->registerRoutes('POST','/verify-email-change', [UserController::class, 'verifyEmailChange']);
-
-
 $router->registerRoutes('GET','/verify', [UserController::class, 'verifyUser']);
 $router->registerRoutes('POST','/verify', [UserController::class, 'verifyUser']);
-
-
+$router->registerRoutes('GET','/admin/dashboard', [AdminController::class, 'dashboard']);
+$router->registerRoutes('GET','/contact', [HomeController::class, 'contact']);
 
 
 

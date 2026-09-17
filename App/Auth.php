@@ -15,4 +15,14 @@ class Auth
         }
         return null;
     }
+    public static function role(): ?string
+    {
+        return (string)$_SESSION['role'] ?? 'user';
+
+
+    }
+    public static function isAdmin(): bool
+    {
+        return self::role() === 'admin';
+    }
 }

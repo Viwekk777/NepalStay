@@ -19,506 +19,273 @@
   </head>
 
   <body>
-
-    <div id="first">
-
-      <nav id="nav">
-
-        <a href="/" id="logo">
+    <header class="home-hero">
+      <nav id="nav" class="premium-nav">
+        <a href="/" id="logo" class="brand">
           <img
             src="/Assets/images/logo.png"
-            alt=""
+            alt="NepalStay logo"
           />
+          <div class="brand-text">
+            <span class="brand-name">NepalStay</span>
+            <span class="brand-tag">Boutique Himalayan Retreats</span>
+          </div>
         </a>
-          <?php if (Auth::check()===true): ?>
 
-            <div id="links">
-              <a href="/">HOME</a>
-              <a href="/rooms">ROOMS</a>
-              <a href="/about">ABOUT</a>
-              <a href="/contact">CONTACT</a>
-              <a href="/logout">LOGOUT</a>
-                <a href="/profile">PROFILE</a>
-            </div>
-          <?php else :?>
-        <div id="links">
-          <a href="/">HOME</a>
-          <a href="/rooms">ROOMS</a>
-          <a href="/about">ABOUT</a>
-          <a href="/contact">CONTACT</a>
-          <a href="/register">REGISTER</a>
-          <a href="/login">LOGIN</a>
-        </div>
-          <?php endif; ?>
-
+        <?php if (Auth::check()===true): ?>
+          <div id="links" class="nav-links">
+            <a href="/">Home</a>
+            <a href="/rooms">Rooms</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+            <a href="/profile">Profile</a>
+            <a class="nav-cta ghost" href="/logout">Logout</a>
+          </div>
+        <?php else :?>
+          <div id="links" class="nav-links">
+            <a href="/">Home</a>
+            <a href="/rooms">Rooms</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+            <a href="/register">Register</a>
+            <a class="nav-cta" href="/login">Book Now</a>
+          </div>
+        <?php endif; ?>
       </nav>
 
-      <div id="hero">
-
-        <div id="location">
-          POKHARA , NEPAL
-        </div>
-
-        <div id="core">
-          Experience Luxury in the Heart of Nepal
-        </div>
-
-        <div id="message">
-          Where Himalayan serenity meets world-class comfort. Your perfect
-          retreat awaits.
-        </div>
-
-        <div id="conatiner">
-
-          <a id="Explore_rooms" href="/rooms">
-            Explore rooms
-          </a>
-
-          <a id="our_story" href="/about">
-            Our story
-          </a>
-
-        </div>
-
-      </div>
-
-      <div id="blue"></div>
-
-    </div>
-
-
-<form action="/availability" method="POST" id="checkout">
-
-    <div class="book">
-        <label for="check_in">CHECK-IN</label>
-
-        <input
-            type="date"
-            id="check_in"
-            name="check_in"
-            class="child"
-            required
-        />
-    </div>
-
-
-    <div class="book">
-        <label for="check_out">CHECK-OUT</label>
-
-        <input
-            type="date"
-            id="check_out"
-            name="check_out"
-            class="child"
-            required
-        />
-    </div>
-
-
-    <div id="guest" class="book">
-
-        <label for="num_guests">
-            GUESTS
-        </label>
-
-        <select
-            name="num_guests"
-            id="selector"
-            class="child"
-            required
-        >
-            <option value="1">1 guest</option>
-            <option value="2">2 guests</option>
-            <option value="3">3 guests</option>
-            <option value="4">4+ guests</option>
-        </select>
-
-    </div>
-
-
-    <button
-        type="submit"
-        id="available"
-        class="child"
-    >
-        CHECK AVAILABILITY
-    </button>
-
-</form>
-
-
-      <div class="rooms">
-
-        <?php foreach ($rooms as $room): ?>
-
-          <a href="/room?room_id=<?= (int) $room['id'] ?>">
-
-            <div class="room">
-
-              <?php if (!empty($room['main_image'])): ?>
-
-                <img
-                  src="<?= htmlspecialchars($room['main_image']) ?>"
-                  alt="<?= htmlspecialchars($room['title']) ?>"
-                >
-
-              <?php endif; ?>
-
-
-              <div class="contents">
-
-                <div class="number">
-                  <?= htmlspecialchars((string) $room['capacity']) ?>
-                </div>
-
-                <h1>
-                  <?= htmlspecialchars($room['title']) ?>
-                </h1>
-
-                <p>
-                  <?= htmlspecialchars($room['description']) ?>
-                </p>
-
-                <div class="price-row">
-
-                  <div class="price">
-
-                    <h1>
-                      NPR <?= htmlspecialchars((string) $room['price']) ?>
-                    </h1>
-
-                    <h3>
-                      /night
-                    </h3>
-
-                  </div>
-
-                  <div class="view-details">
-                    VIEW DETAILS
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </a>
-
-        <?php endforeach; ?>
-
-      </div>
-
-
-      <!-- FIXED: now goes to PHP /rooms route -->
-      <a class="all_rooms" href="/rooms">
-        <p>
-          VIEW ALL ROOMS
+      <section id="hero" class="hero-inner">
+        <p id="location">Pokhara, Nepal</p>
+        <h1 id="core">Find your serene luxury stay in the Himalayas.</h1>
+        <p id="message">
+          Curated mountain-view rooms, heartfelt Nepali hospitality, and
+          effortless booking for your next unforgettable retreat.
         </p>
-      </a>
+        <div id="conatiner" class="hero-actions">
+          <a id="Explore_rooms" href="/rooms">Explore Rooms</a>
+          <a id="our_story" href="/about">Our Story</a>
+        </div>
+      </section>
+    </header>
 
-    </div>
+    <main class="home-main">
+      <section class="booking-shell">
+        <form action="/availability" method="POST" id="checkout">
+          <div class="book">
+            <label for="check_in">Check-In</label>
+            <input
+              type="date"
+              id="check_in"
+              name="check_in"
+              class="child"
+              required
+            />
+          </div>
 
+          <div class="book">
+            <label for="check_out">Check-Out</label>
+            <input
+              type="date"
+              id="check_out"
+              name="check_out"
+              class="child"
+              required
+            />
+          </div>
 
-    <div id="third">
+          <div id="guest" class="book">
+            <label for="selector">Guests</label>
+            <select
+              name="num_guests"
+              id="selector"
+              class="child"
+              required
+            >
+              <option value="1">1 guest</option>
+              <option value="2">2 guests</option>
+              <option value="3">3 guests</option>
+              <option value="4">4+ guests</option>
+            </select>
+          </div>
 
-      <div class="why_us">
+          <button
+            type="submit"
+            id="available"
+            class="child"
+          >
+            Check Availability
+          </button>
+        </form>
+      </section>
 
-        <div id="hospitality">
-
-          <h2>
-            Why NepalStay
-          </h2>
-
-          <h1>
-            The NepalStay Difference
-          </h1>
-
-          <h3>
-            We go beyond hospitality to give you a genuine Nepali experience.
-          </h3>
-
+      <section class="rooms-section">
+        <div class="section-intro">
+          <p class="eyebrow">Signature Collection</p>
+          <h2>Rooms crafted for calm, comfort, and mountain living.</h2>
         </div>
 
+        <div class="rooms">
+          <?php foreach ($rooms as $room): ?>
+            <a class="room-link" href="/room?room_id=<?= (int) $room['id'] ?>">
+              <article class="room">
+                <?php if (!empty($room['main_image'])): ?>
+                  <img
+                    src="<?= htmlspecialchars($room['main_image']) ?>"
+                    alt="<?= htmlspecialchars($room['title']) ?>"
+                  >
+                <?php endif; ?>
 
-        <div class="reasons">
+                <div class="contents">
+                  <span class="number">
+                    Up to <?= htmlspecialchars((string) $room['capacity']) ?> Guests
+                  </span>
 
-          <div class="reason">
+                  <h3>
+                    <?= htmlspecialchars($room['title']) ?>
+                  </h3>
 
-            <i class="fa-solid fa-mountain"></i>
+                  <p>
+                    <?= htmlspecialchars($room['description']) ?>
+                  </p>
 
-            <h1>
-              Himalayan views
-            </h1>
+                  <div class="price-row">
+                    <div class="price">
+                      <strong>NPR <?= htmlspecialchars((string) $room['price']) ?></strong>
+                      <span>/night</span>
+                    </div>
 
-            <h3>
-              Breathtaking panoramic views of the Annapurna range from every
-              room and terrace.
-            </h3>
-
-          </div>
-
-
-          <div class="reason" id="Local Cuisine">
-
-            <i class="fa-solid fa-bell-concierge"></i>
-
-            <h1>
-              Local Cuisine
-            </h1>
-
-            <h3>
-              Authentic Nepali dal bhat, momo, and thakali dishes made fresh
-              every day by local chefs.
-            </h3>
-
-          </div>
-
-
-          <div class="reason">
-
-            <i class="fa-solid fa-wifi"></i>
-
-            <h1>
-              Fast WiFi
-            </h1>
-
-            <h3>
-              Stay connected with high-speed fiber internet throughout the
-              entire property.
-            </h3>
-
-          </div>
-
-
-          <div class="reason">
-
-            <i class="fa-solid fa-bell-concierge"></i>
-
-            <h1>
-              24/7 Service
-            </h1>
-
-            <h3>
-              Our front desk team is available around the clock to ensure your
-              perfect stay.
-            </h3>
-
-          </div>
-
+                    <span class="view-details">View Room</span>
+                  </div>
+                </div>
+              </article>
+            </a>
+          <?php endforeach; ?>
         </div>
 
-      </div>
+        <a class="all_rooms" href="/rooms">View All Rooms</a>
+      </section>
 
+      <section id="third" class="experience">
+        <div class="why_us">
+          <div id="hospitality">
+            <p class="eyebrow">Why NepalStay</p>
+            <h2>The NepalStay Difference</h2>
+            <p>
+              We blend timeless mountain character with attentive service for
+              stays that feel deeply personal.
+            </p>
+          </div>
 
-      <div class="flash">
+          <div class="reasons">
+            <article class="reason">
+              <i class="fa-solid fa-mountain"></i>
+              <h3>Himalayan Views</h3>
+              <p>
+                Panoramic Annapurna scenery from rooms, terraces, and sunrise
+                lounges.
+              </p>
+            </article>
 
-        <div>
-          800+ Happy Guests
+            <article class="reason">
+              <i class="fa-solid fa-utensils"></i>
+              <h3>Local Cuisine</h3>
+              <p>
+                Fresh Nepali classics prepared daily with seasonal regional
+                ingredients.
+              </p>
+            </article>
+
+            <article class="reason">
+              <i class="fa-solid fa-wifi"></i>
+              <h3>Fast WiFi</h3>
+              <p>
+                Reliable high-speed internet across every room and shared
+                space.
+              </p>
+            </article>
+
+            <article class="reason">
+              <i class="fa-solid fa-bell-concierge"></i>
+              <h3>24/7 Service</h3>
+              <p>
+                Dedicated concierge and front desk support whenever you need
+                assistance.
+              </p>
+            </article>
+          </div>
         </div>
 
-        <div>
-          15 Room Types
+        <div class="flash">
+          <div><strong>800+</strong><span>Happy Guests</span></div>
+          <div><strong>15</strong><span>Room Types</span></div>
+          <div><strong>4.9★</strong><span>Average Rating</span></div>
+          <div><strong>8</strong><span>Years Experience</span></div>
+        </div>
+      </section>
+
+      <section id="reviews">
+        <div class="section-intro centered">
+          <p class="eyebrow">Guest Reviews</p>
+          <h2>Stories from memorable stays.</h2>
         </div>
 
-        <div>
-          4.9★ Average Rating
+        <div class="scrollbar">
+          <article class="review-card">
+            <div class="stars">★★★★★</div>
+            <p>
+              “Absolutely breathtaking views of Phewa Lake. The staff made us
+              feel like royalty.”
+            </p>
+            <div class="reviewer">— Ramesh K., Kathmandu</div>
+          </article>
+
+          <article class="review-card">
+            <div class="stars">★★★★★</div>
+            <p>
+              “The Himalayan Family Suite exceeded every expectation. Will be
+              back next year.”
+            </p>
+            <div class="reviewer">— Sarah M., London</div>
+          </article>
+
+          <article class="review-card">
+            <div class="stars">★★★★☆</div>
+            <p>
+              “Dal bhat by the lake at sunrise — a memory I'll carry forever.”
+            </p>
+            <div class="reviewer">— Ankit S., Mumbai</div>
+          </article>
         </div>
-
-        <div>
-          8 Years Experience
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div id="reviews">
-
-      <h3>
-        Guest Reviews
-      </h3>
-
-      <h1>
-        What Our Guests Say
-      </h1>
-
-
-      <div class="scrollbar">
-
-        <div class="review-card">
-
-          <div class="stars">
-            ★★★★★
-          </div>
-
-          <p>
-            "Absolutely breathtaking views of Phewa Lake. The staff made us feel
-            like royalty."
-          </p>
-
-          <div class="reviewer">
-            — Ramesh K., Kathmandu
-          </div>
-
-        </div>
-
-
-        <div class="review-card">
-
-          <div class="stars">
-            ★★★★★
-          </div>
-
-          <p>
-            "The Himalayan Family Suite exceeded every expectation. Will be back
-            next year."
-          </p>
-
-          <div class="reviewer">
-            — Sarah M., London
-          </div>
-
-        </div>
-
-
-        <div class="review-card">
-
-          <div class="stars">
-            ★★★★☆
-          </div>
-
-          <p>
-            "Dal bhat by the lake at sunrise — a memory I'll carry forever."
-          </p>
-
-          <div class="reviewer">
-            — Ankit S., Mumbai
-          </div>
-
-        </div>
-
-
-        <div class="review-card">
-
-          <div class="stars">
-            ★★★★★
-          </div>
-
-          <p>
-            "Seamless booking, warm hospitality, and the WiFi actually worked.
-            Perfect."
-          </p>
-
-          <div class="reviewer">
-            — Julia T., Berlin
-          </div>
-
-        </div>
-
-
-        <div class="review-card">
-
-          <div class="stars">
-            ★★★★★
-          </div>
-
-          <p>
-            "Best hotel experience in Nepal. The mountain view from our balcony
-            was unreal."
-          </p>
-
-          <div class="reviewer">
-            — David L., Sydney
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
+      </section>
+    </main>
 
     <footer>
-
       <div id="summary">
-
-        <h1>
-          NepalStay
-        </h1>
-
-        <h3>
-          A luxury boutique hotel nestled in Lakeside, Pokhara. Where Himalayan
-          beauty meets heartfelt Nepali hospitality.
-        </h3>
-
+        <h2>NepalStay</h2>
+        <p>
+          A luxury boutique escape in Lakeside, Pokhara — where Himalayan beauty
+          meets warm Nepali hospitality.
+        </p>
       </div>
-
 
       <div id="quick_links">
-
-        <h2>
-          Home
-        </h2>
-
-        <h2>
-          Rooms
-        </h2>
-
-        <h2>
-          About us
-        </h2>
-
-        <h2>
-          contact
-        </h2>
-
+        <h3>Explore</h3>
+        <a href="/">Home</a>
+        <a href="/rooms">Rooms</a>
+        <a href="/about">About Us</a>
+        <a href="/contact">Contact</a>
       </div>
-
 
       <div id="contact">
-
-        <div>
-          <img src="" alt="" />
-          <h2>
-            Lakeside-6, Pokhara, Gandaki Province, Nepal
-          </h2>
-        </div>
-
-        <div>
-          <img src="" alt="" />
-          <h2>
-            +977-061-XXXXXX
-          </h2>
-        </div>
-
-        <div>
-          <img src="" alt="" />
-          <h2>
-            info@nepalstay.com
-          </h2>
-        </div>
-
-        <div>
-          <img src="" alt="" />
-          <h2>
-            Front Desk: Open 24/7
-          </h2>
-        </div>
-
+        <h3>Contact</h3>
+        <p>Lakeside-6, Pokhara, Gandaki Province, Nepal</p>
+        <p>+977-061-XXXXXX</p>
+        <p>info@nepalstay.com</p>
+        <p>Front Desk: Open 24/7</p>
       </div>
-
 
       <div id="copyright">
-
-        <h2>
-          © 2025 NepalStay. All rights reserved. | Lakeside, Pokhara, Nepal
-        </h2>
-
+        <p>© 2025 NepalStay. All rights reserved.</p>
       </div>
-
     </footer>
-
   </body>
 </html>

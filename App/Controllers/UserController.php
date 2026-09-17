@@ -240,9 +240,20 @@ class UserController
         }
 
         session_regenerate_id(true);
+        $_SESSION['role']= (string) ($user['role'] ?? 'user');
         $_SESSION['user_id'] = (int) $user['id'];
-        header('Location: /');
-        exit();
+       if($_SESSION['role'] === 'admin')
+       {
+           header('Location: /admin/dashboard');
+       }
+       else
+       {
+           header('Location: /');
+       }
+       exit();
+
+
+
 
     }
 

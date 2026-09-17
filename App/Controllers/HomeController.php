@@ -26,4 +26,8 @@ class HomeController
            require_once __DIR__ .'/../../Views/about.php';
 
     }
+    public function contact()
+    {
+        require_once __DIR__ .'/../../Views/contact.php';
+    }
 }
