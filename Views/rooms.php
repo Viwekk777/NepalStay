@@ -33,6 +33,16 @@
 
     <main class="home-main">
         <section class="rooms-section">
+            <?php if (!empty($errors)): ?>
+                <div role="alert">
+                    <?php foreach ($errors as $error): ?>
+                        <p><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
+                    <?php endforeach; ?>
+                    <a href="/">Change your search</a>
+                </div>
+            <?php elseif (!$rooms): ?>
+                <p>No rooms are available for this search. Please try other dates or contact us.</p>
+            <?php endif; ?>
             <div class="rooms">
                 <?php foreach ($rooms as $room): ?>
                     <a class="room-link" href="/room?room_id=<?= (int) $room['id'] ?>">

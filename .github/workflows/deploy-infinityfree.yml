@@ -28,7 +28,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ vars.DEPLOY_PHP_VERSION || '8.3' }}
-          extensions: pdo_mysql, mbstring
+          extensions: pdo_mysql, pdo_sqlite, mbstring
           tools: composer:v2
           coverage: none
 
@@ -37,6 +37,9 @@ jobs:
 
       - name: Check application PHP syntax
         run: find App Public Views -type f -name '*.php' -print0 | xargs -0 -r -n 1 php -l
+
+      - name: Check booking flow
+        run: php tests/booking-regression.php
 
       - name: Validate deployment configuration
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.INFINITYFREE_DEPLOY_ENABLED == 'true'
@@ -85,4 +88,5 @@ jobs:
             Public/Assets/Uploads/**
             tmp_case_test/**
             docs/**
+            tests/**
             README*
