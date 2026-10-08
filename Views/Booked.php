@@ -2,6 +2,18 @@
 
 declare(strict_types=1);
 
+$bookingId = (int) $booking['id'];
+$roomTitle = (string) $booking['room_title'];
+$roomId = (int) $booking['room_id'];
+$guestName = (string) $booking['guest_name'];
+$guestEmail = (string) $booking['guest_email'];
+$guestPhone = (string) $booking['guest_phone'];
+$checkIn = (string) $booking['check_in'];
+$checkOut = (string) $booking['check_out'];
+$numGuests = (int) $booking['num_guests'];
+$totalPrice = (float) $booking['total_price'];
+$status = (string) $booking['status'];
+
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +27,7 @@ declare(strict_types=1);
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Booking Confirmed - NepalStay</title>
+    <title>Reservation Received - NepalStay</title>
 
     <link
         rel="stylesheet"
@@ -26,12 +38,12 @@ declare(strict_types=1);
 
 <body>
 
-    <main>
+    <main class="page-shell">
 
         <section>
 
             <h1>
-                Booking Confirmed!
+                Reservation Received!
             </h1>
 
             <p>
@@ -39,7 +51,7 @@ declare(strict_types=1);
             </p>
 
             <p>
-                Your room has been successfully booked with NepalStay.
+                Your reservation has been recorded with NepalStay. Please check its status below.
             </p>
 
         </section>
@@ -121,7 +133,7 @@ declare(strict_types=1);
 
             <p>
                 <strong>Status:</strong>
-                Confirmed
+                <?= htmlspecialchars(ucfirst($status), ENT_QUOTES, 'UTF-8') ?>
             </p>
 
         </section>
