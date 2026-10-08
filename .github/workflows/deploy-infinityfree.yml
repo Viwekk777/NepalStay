@@ -1,0 +1,85 @@
+name: Deploy NepalStay to InfinityFree
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infinityfree-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.DEPLOY_PHP_VERSION || '8.3' }}
+          extensions: pdo_mysql, mbstring
+          tools: composer:v2
+          coverage: none
+
+      - name: Install production dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader --no-scripts --no-plugins
+
+      - name: Check application PHP syntax
+        run: find App Public Views -type f -name '*.php' -print0 | xargs -0 -r -n 1 php -l
+
+      - name: Validate deployment configuration
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.INFINITYFREE_DEPLOY_ENABLED == 'true'
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          python3 - <<'PY'
+          import os
+          for key in ("FTP_SERVER", "FTP_USERNAME", "FTP_PASSWORD", "FTP_SERVER_DIR"):
+              if not os.environ.get(key):
+                  raise SystemExit(f"Missing GitHub Actions secret: {key}")
+          path = os.environ["FTP_SERVER_DIR"]
+          if path in ("/", "./") or not path.endswith("/") or ".." in path.split("/"):
+              raise SystemExit("FTP_SERVER_DIR must name the confirmed application directory and end with /")
+          PY
+
+      - name: Upload application to InfinityFree
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.INFINITYFREE_DEPLOY_ENABLED == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          security: strict
+          local-dir: ./
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          dangerous-clean-slate: false
+          timeout: 60000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.idea/**
+            **/.env
+            **/.env.*
+            **/node_modules/**
+            **/*.sql
+            **/*.log
+            Public/Assets/Uploads/**
+            tmp_case_test/**
+            docs/**
+            README*

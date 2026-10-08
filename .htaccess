@@ -1,10 +1,21 @@
 RewriteEngine On
 
-# Stop rewrite rules for actual physical files (CSS, JS, Images)
+# Block sensitive files
+<FilesMatch "^\.env$|^composer\.(json|lock)$">
+    Require all denied
+</FilesMatch>
 
+# Block direct access to source folders
+RewriteRule ^(App|vendor|Views)/ - [F,L]
+
+# Serve assets from Public/Assets transparently
+RewriteRule ^Assets/(.*)$ Public/Assets/$1 [L]
+
+# Route everything else through the front controller
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ Public/index.php [QSA,L]
+RewriteEngine On
 
-# Send all other page requests to your index.php router
-
-RewriteRule ^(.\*)$ index.php [QSA,L]
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} =http
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
