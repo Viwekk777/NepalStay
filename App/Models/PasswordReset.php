@@ -69,6 +69,15 @@ final class PasswordReset
         }
     }
 
+    public function deliveryFailed(string $token): void
+    {
+        // Match only this attempt; never revoke a newer reset request.
+        $stmt = $this->db->prepare('UPDATE password_resets SET expires_at = 0,
+            request_count = CASE WHEN request_count > 0 THEN request_count - 1 ELSE 0 END
+            WHERE token_hash = :token');
+        $stmt->execute(['token' => hash('sha256', $token)]);
+    }
+
     public function valid(string $token): bool
     {
         return $this->lookup($token) !== false;

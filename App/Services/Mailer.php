@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use PHPMailer\PHPMailer\Exception;
+use RuntimeException;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer
@@ -30,18 +30,29 @@ class Mailer
 
     private function send(string $email, string $subject, string $body): void
     {
+        foreach (['MAIL_HOST', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_FROM'] as $key) {
+            if (trim((string) ($_ENV[$key] ?? '')) === '') {
+                throw new RuntimeException('MAIL_CONFIG');
+            }
+        }
         $mail = new PHPMailer(true);
-
+        $mail->CharSet = 'UTF-8';
+        $mail->Timeout = 20;
         $mail->isSMTP();
         $mail->Host = $_ENV['MAIL_HOST'];
         $mail->SMTPAuth = true;
         $mail->Username = $_ENV['MAIL_USERNAME'];
         $mail->Password = $_ENV['MAIL_PASSWORD'];
-        $mail->Port = (int) $_ENV['MAIL_PORT'];
+        $mail->Port = (int) ($_ENV['MAIL_PORT'] ?? 587);
+        // Port 465 starts TLS immediately; 587 upgrades with STARTTLS.
+        // Keep certificate verification enabled.
+        $mail->SMTPSecure = $mail->Port === 465
+            ? PHPMailer::ENCRYPTION_SMTPS
+            : PHPMailer::ENCRYPTION_STARTTLS;
 
         $mail->setFrom(
             $_ENV['MAIL_FROM'],
-            $_ENV['MAIL_FROM_NAME']
+            $_ENV['MAIL_FROM_NAME'] ?? 'NepalStay'
         );
 
         $mail->addAddress($email);

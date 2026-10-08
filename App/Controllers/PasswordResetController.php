@@ -40,6 +40,7 @@ final class PasswordResetController
                 // Session limit also covers requests to many different addresses.
                 if ((int) ($_SESSION['reset_last_request'] ?? 0) <= time() - 60) {
                     $_SESSION['reset_last_request'] = time();
+                    $token = null;
                     try {
                         $token = $this->resets->issue($email);
                         if ($token !== null) {
@@ -47,8 +48,20 @@ final class PasswordResetController
                             $this->mailer->sendPasswordReset($email, 'https://nepalstay.bibeklamsal.tech/reset-password?token=' . $token);
                         }
                     } catch (Throwable $e) {
-                        // Do not disclose account existence, SMTP credentials, or reset tokens.
-                        error_log('NepalStay password reset request could not be completed.');
+                        if ($token !== null) {
+                            try { $this->resets->deliveryFailed($token); }
+                            catch (Throwable $cleanupError) { /* Preserve the original failure category. */ }
+                        }
+                        // Classify locally; never return raw SMTP/SQL messages or credentials.
+                        $category = $e instanceof \PDOException ? 'RESET-STORAGE' : 'MAIL-SEND';
+                        $message = strtolower($e->getMessage());
+                        if ($message === 'mail_config') $category = 'MAIL-CONFIG';
+                        elseif (str_contains($message, 'authenticate')) $category = 'MAIL-AUTH';
+                        elseif (str_contains($message, 'connect') || str_contains($message, 'smtp host')) $category = 'MAIL-CONNECTION';
+                        error_log('NepalStay recovery failure: ' . $category . '; code=' . (string) $e->getCode());
+                        http_response_code(503);
+                        $submitted = false;
+                        $errors[] = 'We could not complete the reset request. Please wait one minute and try again. If it continues, report this reference: ' . $category . '.';
                     }
                 }
             }

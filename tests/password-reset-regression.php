@@ -5,8 +5,8 @@ set_error_handler(function($severity,$message,$file,$line){throw new ErrorExcept
 function check(bool $ok,string $msg):void{if(!$ok)throw new RuntimeException($msg);}
 function capture(callable $fn):string{ob_start();try{$fn();return ob_get_contents();}finally{ob_end_clean();}}
 class ResetTestMailer extends \App\Services\Mailer {
-    public array $sent=[]; public array $notifications=[];
-    public function sendPasswordReset(string $email,string $url):void{$this->sent[]=[$email,$url];}
+    public array $sent=[]; public array $notifications=[]; public bool $fail=false;
+    public function sendPasswordReset(string $email,string $url):void{if($this->fail)throw new RuntimeException("SMTP Error: Could not authenticate. private-debug-details");$this->sent[]=[$email,$url];}
     public function sendPasswordChanged(string $email):void{$this->notifications[]=$email;}
 }
 $db=new PDO('sqlite::memory:');$db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
@@ -48,4 +48,20 @@ check(!$model->valid($older) && $model->valid($newer),'Resend replaces old token
 $db->exec("UPDATE users SET email='changed@example.test'");check(!$model->valid($newer),'Email changes invalidate links');
 $db->exec('UPDATE password_resets SET requested_at=0, request_count=5');check($model->issue('changed@example.test')===null,'Hourly limit works');
 check(!$model->valid('invalid'),'Malformed tokens rejected');
+// Failed SMTP sends must not claim success or exhaust the hourly allowance.
+$db->exec("UPDATE users SET email='guest@example.test'");
+$db->exec('UPDATE password_resets SET requested_at=0, request_count=0');
+$_SESSION=[]; $_SERVER['REQUEST_METHOD']='GET'; $_POST=[];
+capture(fn()=>$controller->forgot());
+$_POST=['email'=>'guest@example.test','csrf'=>$_SESSION['reset_csrf']];
+$_SERVER['REQUEST_METHOD']='POST'; $mail->fail=true;
+$html=capture(fn()=>$controller->forgot());
+check(http_response_code()===503 && str_contains($html,'MAIL-AUTH') && !str_contains($html,'Check your inbox.'),'SMTP failure displays an actionable error');
+check(!str_contains($html,'private-debug-details'),'Raw SMTP details are never exposed');
+check((int)$db->query('SELECT request_count FROM password_resets')->fetchColumn()===0,'Failed email does not consume hourly quota');
+check((int)$db->query('SELECT expires_at FROM password_resets')->fetchColumn()===0,'Unsent link is invalidated');
+$db->exec('UPDATE password_resets SET requested_at=0');
+$_SESSION['reset_last_request']=0; $mail->fail=false;
+$html=capture(fn()=>$controller->forgot());
+check(str_contains($html,'Check your inbox.'),'Retry succeeds after the email service recovers');
 echo "Password reset regression checks passed.\n";
