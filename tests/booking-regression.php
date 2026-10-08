@@ -151,6 +151,19 @@ namespace {
     capture(fn() => $controller->booked());
     check(count($bookings->getBookingsByUserId(42)) === 1, 'Signed-in booking must link to user history.');
 
+    $overview = $bookings->getAdminOverview();
+    check((int) $overview['total'] === 2 && (int) $overview['pending'] === 1 && (int) $overview['confirmed'] === 0, 'Admin counts must reflect stored reservation statuses.');
+    check(count($bookings->getRecentBookings()) === 2, 'Admin list must use recorded reservations.');
+    $admin = new \App\Controllers\AdminController($bookings);
+    unset($_SESSION['role']);
+    http_response_code(200);
+    $html = capture(fn() => $admin->dashboard());
+    check(http_response_code() === 403 && !str_contains($html, 'Test Guest'), 'Non-admins must not receive reservation data.');
+    $_SESSION['role'] = 'admin';
+    http_response_code(200);
+    $html = capture(fn() => $admin->dashboard());
+    check(str_contains($html, 'Recent reservations') && str_contains($html, 'Test Guest'), 'Admin dashboard must render its case-sensitive template with live model data.');
+
     $router->get('/health-test', fn() => 'ok');
     check($router->resolve('GET', '/health-test') === 'ok', 'Callable routes must still work.');
     try {

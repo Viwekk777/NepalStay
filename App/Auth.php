@@ -17,7 +17,7 @@ class Auth
     }
     public static function role(): ?string
     {
-        return (string)$_SESSION['role'] ?? 'user';
+        return (string) ($_SESSION['role'] ?? 'user');
 
 
     }

@@ -126,4 +126,18 @@ class Booking
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getAdminOverview(): array
+    {
+        return $this->pdo->query("SELECT COUNT(*) AS total,
+            COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0) AS pending,
+            COALESCE(SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END), 0) AS confirmed
+            FROM bookings")->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getRecentBookings(): array
+    {
+        return $this->pdo->query("SELECT bookings.*, rooms.title AS room_title
+            FROM bookings INNER JOIN rooms ON rooms.id = bookings.room_id
+            ORDER BY bookings.created_at DESC, bookings.id DESC LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
