@@ -57,6 +57,7 @@ $router->registerRoutes('POST','/rooms',[RoomController::class,'rooms']);
 $router->registerRoutes('GET', '/room', [RoomController::class, 'getRoom']);
 $router->registerRoutes('GET','/about', [HomeController::class,'about']);
 $router->registerRoutes('GET','/book', [BookingController::class,'book']);
+$router->registerRoutes('GET','/booking', [BookingController::class,'book']);
 $router->registerRoutes('POST','/booking', [BookingController::class,'booked']);
 $router->registerRoutes('POST','/availability',[BookingController::class, 'checkAvailability']);
 $router->registerRoutes('GET','/register', [UserController::class, 'register']);
