@@ -23,6 +23,7 @@ use App\Controllers\Router;
 use App\Controllers\HomeController;
 use App\Controllers\RoomController;
 use App\Controllers\UserController;
+use App\Controllers\PasswordResetController;
 use App\Models\DB;
 use App\Models\Booking;
 use App\Models\User;
@@ -64,6 +65,10 @@ $router->registerRoutes('GET','/register', [UserController::class, 'register']);
 $router->registerRoutes('POST','/register', [UserController::class, 'register']);
 $router->registerRoutes('GET','/login', [UserController::class, 'login']);
 $router->registerRoutes('POST','/login', [UserController::class, 'login']);
+$router->registerRoutes('GET', '/forgot-password', [PasswordResetController::class, 'forgot']);
+$router->registerRoutes('POST', '/forgot-password', [PasswordResetController::class, 'forgot']);
+$router->registerRoutes('GET', '/reset-password', [PasswordResetController::class, 'reset']);
+$router->registerRoutes('POST', '/reset-password', [PasswordResetController::class, 'reset']);
 // Logout should be a POST route to avoid accidental logouts via links
 $router->registerRoutes('POST','/logout', [UserController::class, 'logout']);
 $router->registerRoutes('GET','/logout', [UserController::class, 'logout']);
@@ -87,5 +92,15 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 
 $container->get(DB::class)->getConnection();
+
+// A password change invalidates every existing authenticated session on its next request.
+if (isset($_SESSION['user_id'])) {
+    $sessionUser = $container->get(User::class)->findById((int) $_SESSION['user_id']);
+    $fingerprint = $sessionUser ? hash('sha256', (string) $sessionUser['password_hash']) : '';
+    if (!$sessionUser || !hash_equals($fingerprint, (string) ($_SESSION['auth_password_fingerprint'] ?? ''))) {
+        $_SESSION = [];
+        session_regenerate_id(true);
+    }
+}
 
 $router ->resolve($method, $uri);

@@ -242,6 +242,7 @@ class UserController
         session_regenerate_id(true);
         $_SESSION['role']= (string) ($user['role'] ?? 'user');
         $_SESSION['user_id'] = (int) $user['id'];
+        $_SESSION['auth_password_fingerprint'] = hash('sha256', (string) $user['password_hash']);
        if($_SESSION['role'] === 'admin')
        {
            header('Location: /admin/dashboard');

@@ -41,6 +41,9 @@ jobs:
       - name: Check booking flow
         run: php tests/booking-regression.php
 
+      - name: Check password recovery
+        run: php tests/password-reset-regression.php
+
       - name: Validate deployment configuration
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.INFINITYFREE_DEPLOY_ENABLED == 'true'
         env:
